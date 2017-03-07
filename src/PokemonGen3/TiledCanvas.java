@@ -16,40 +16,25 @@ import javafx.scene.image.Image;
  */
 public class TiledCanvas extends Canvas {
      
-    int gridwidth;
-    int gridheight;
-    int[][] grid;
-    int currentX;
-    int currentY;
+    private int gridwidth;
+    private int gridheight;
     
-    //test if Canvas with specefied tiles or if a grid of panes is faster.
+    /**
+     * Create a new Canvas with methods to create a gridded world.
+     * @param width number of tiles wide
+     * @param height number of tiles tall
+     */
     public TiledCanvas(int width, int height) 
     {
         super(width, height);
         gridwidth = width;
         gridheight = height;
-        grid = new int[gridwidth][gridheight];
-        currentX = 0;
-        currentY = 0; 
-    }
-    
-    public TiledCanvas(int width, int height, String filename)
-    {
-        this(width, height);
-        // TODO: create a filetype to read and load it here
-    }
-    
-    public TiledCanvas(int width, int height, int startingX, int startingY)
-    {
-        this(width, height);
-        currentX = startingX;
-        currentY = startingY;
     }
     
     /**
      * TODO: remove when done testing
      */
-    public void setTestTiles()
+    public void SetTestTiles()
     {
         TileRetriever tileRetriever = new TileRetriever();
         GraphicsContext gc = getGraphicsContext2D();
@@ -57,41 +42,95 @@ public class TiledCanvas extends Canvas {
         {
             for (int j = 0; j < 11; j++)
             {
-                Image tile = tileRetriever.GetImage(Integer.toString((j + 1) + (i * 11)));
-                gc.drawImage(tile, j*30, i*30, 30, 30);
+                Image tile = tileRetriever.GetImage((j + 1) + (i * 11));
+                gc.drawImage(tile, j*30 - 30, i*30 - 30, 30, 30);
             }
         }
-    }
-    
-    public void loadMap()
-    {
-        //TODO: implement
-    }
-    
-    public void setPosition(int xPos, int yPos)
-    {
-        currentX = xPos;
-        currentY = yPos;
-    }
-    
-    public void moveLeft()
-    {
         
+        gc.clearRect(0, 0, GameValues.TILE_WIDTH, GameValues.TILE_WIDTH);
+        gc.drawImage(tileRetriever.GetImage(70), 0, 0, 30, 30);
+        
+        gc.clearRect(45, 45, GameValues.TILE_WIDTH, GameValues.TILE_WIDTH);
     }
     
-    public void moveRight()
-    {
-        
+    /**
+     * Draws the full grid of tiles
+     * @param region 
+     */
+    public void DrawMapRegion(int[][] region)
+    {   
+        DrawMapRegionWithOffset(region, true, 0);
     }
     
-    public void moveDown()
+    /**
+     * Draws the map region with the tiles offset. Useful for animating movement
+     * by calling rapidly together with increasing offset until TILE_WIDTH is reached.
+     * @param region
+     * @param isVertical
+     * @param offset 
+     */
+    public void DrawMapRegionWithOffset(int[][] region, boolean isVertical, int offset)
     {
+        int neededHeight = gridheight;
+        int neededWidth = gridwidth;
+        int startingPosX = 0;
+        int startingPosY = 0;
         
+        if (offset < 0 || offset > GameValues.TILE_WIDTH)
+        {
+            throw new IndexOutOfBoundsException("offset must be between 0 and " + GameValues.TILE_WIDTH + ".");
+        }
+        
+        if (offset == 0)
+        {
+            if (region.length != neededHeight || region[0].length != neededWidth)
+            {
+                throw new IndexOutOfBoundsException("Region must be " + neededHeight + " rows and " + neededWidth + " columns.");
+            }
+        }
+        else
+        {
+            if (isVertical)
+            {
+                neededHeight++;
+                startingPosY = (offset < 0) ? 1 : 0;
+            }
+            else
+            {
+                neededWidth++;
+                startingPosX = (offset < 0) ? 1 : 0;
+            }
+            
+            if (region.length != neededHeight || region[0].length != neededWidth)
+            {
+                throw new IndexOutOfBoundsException("Region must be " + neededHeight + " rows and " + neededWidth + " columns.");
+            }
+        }
+        
+        // TODO add drawing code here
     }
     
-    public void moveUp()
+    /**
+     * Draws a specific tile
+     * @param x
+     * @param y
+     * @param tile 
+     */
+    public void drawTile(int x, int y, Image tile)
     {
+        if (x < 0 || y < 0 || x >= GameValues.GAME_WIDTH / GameValues.TILE_WIDTH || y >= GameValues.GAME_HEIGHT / GameValues.TILE_WIDTH)
+        {
+            throw new IndexOutOfBoundsException("Selected Coordinate outside of region.");
+        }
         
+        if (tile == null)
+        {
+            throw new NullPointerException("Image cannot be null");
+        }
+        
+        GraphicsContext gc = getGraphicsContext2D();
+        gc.clearRect(x * GameValues.TILE_WIDTH, y * GameValues.TILE_WIDTH, GameValues.TILE_WIDTH, GameValues.TILE_WIDTH);
+        gc.drawImage(tile, x * GameValues.TILE_WIDTH, y * GameValues.TILE_WIDTH, GameValues.TILE_WIDTH, GameValues.TILE_WIDTH);
     }
     
 }

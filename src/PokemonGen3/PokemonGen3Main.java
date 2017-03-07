@@ -27,15 +27,18 @@ public class PokemonGen3Main extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        TiledCanvas canvasRoot = new TiledCanvas(300, 180);
-        canvasRoot.setTestTiles();
+        Initialize();
+        
+        TiledCanvas canvasRoot = new TiledCanvas(GameValues.GAME_WIDTH, GameValues.GAME_HEIGHT);
+        canvasRoot.SetTestTiles();
+        
         
         
         Group root = new Group();
         VBox vbox = new VBox();
         vbox.getChildren().addAll(canvasRoot);
         root.getChildren().add(vbox);
-        Scene scene = new Scene(root, 300, 180);
+        Scene scene = new Scene(root, GameValues.GAME_WIDTH, GameValues.GAME_HEIGHT);
         
         primaryStage.setResizable(false);
         primaryStage.setTitle("Pokemon v. Aaron");
@@ -49,6 +52,14 @@ public class PokemonGen3Main extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+    
+    /**
+     * Run any code needed to be run BEFORE creating the TiledCanvas object.
+     */
+    private void Initialize()
+    {
+        TileRetriever.InitTileMap();
     }
     
 }

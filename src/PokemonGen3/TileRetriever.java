@@ -5,6 +5,7 @@
  */
 package PokemonGen3;
 
+import java.util.HashMap;
 import javafx.scene.image.Image;
 /**
  *
@@ -13,14 +14,20 @@ import javafx.scene.image.Image;
 
 public class TileRetriever {
     
-    public Image GetImage(String imageName)
+    public static HashMap<Integer, String> TileMap;
+    
+    public static void InitTileMap()
     {
-        //return new Image("Resources/01.png");
-        return new Image(("Resources/" + String.format("%02d", Integer.parseInt(imageName)) + ".png"));
-        //return new Image(getClass().getResourceAsStream("Resources/" + String.format("%02d", Integer.parseInt(imageName)) + ".png"));
-        //System.out.println((getClass().getResourceAsStream("Resources/" + String.format("%02d", Integer.parseInt(imageName)) + ".png")));  
-        //return new Image(String.format("%02d", Integer.getInteger(imageName)) + ".png");
-        //return null;
+        TileMap = new HashMap<>();
+        for (int i = 1; i <= 77; i++)
+        {
+            TileMap.put(i, String.format("%02d", i));
+        }
+    }
+    
+    public Image GetImage(int tileKey)
+    {
+        return new Image(("Resources/" + TileMap.get(tileKey) + ".png"));
     }
     
 }

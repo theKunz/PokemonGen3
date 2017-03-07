@@ -71,7 +71,7 @@ public class MapHelper {
         switch (action)
         {
             case NOTHING:
-                return;
+                break;
             case TEST:
                 break;
             case CUT:
