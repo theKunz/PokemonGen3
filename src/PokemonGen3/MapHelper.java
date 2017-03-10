@@ -13,16 +13,9 @@ import java.io.File;
  */
 public class MapHelper {
     
-    public static enum MapAction {  TEST,
-                                    NOTHING,
-                                    PUSH, 
-                                    CUT, 
-                                    MOVE_THROUGH_GRASS,
-                                    SURF_THROUGH_WATER  };
-    
     private byte mapWidth;
     private byte mapHeight;
-    private int[][] savedMap;
+    private Map map;
     private File mapFile;
     
     public MapHelper()
@@ -61,7 +54,7 @@ public class MapHelper {
      * @param y 
      * @param action
      */
-    public void modifyMap(int[][] map, int x, int y, MapAction action)
+    public void modifyMap(int[][] map, int x, int y, Map.MapAction action)
     {
         if (action == null)
         {
@@ -84,6 +77,5 @@ public class MapHelper {
                 break;
         }
     }
-    
     
 }

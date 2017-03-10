@@ -57,7 +57,7 @@ public class TiledCanvas extends Canvas {
      * Draws the full grid of tiles
      * @param region 
      */
-    public void DrawMapRegion(int[][] region)
+    public void DrawMapRegion(Image[][] region)
     {   
         DrawMapRegionWithOffset(region, true, 0);
     }
@@ -69,16 +69,15 @@ public class TiledCanvas extends Canvas {
      * @param isVertical
      * @param offset 
      */
-    public void DrawMapRegionWithOffset(int[][] region, boolean isVertical, int offset)
+    public void DrawMapRegionWithOffset(Image[][] region, boolean isVertical, int offset)
     {
+        GraphicsContext gc = this.getGraphicsContext2D();
         int neededHeight = gridheight;
         int neededWidth = gridwidth;
-        int startingPosX = 0;
-        int startingPosY = 0;
         
         if (offset < 0 || offset > GameValues.TILE_WIDTH)
         {
-            throw new IndexOutOfBoundsException("offset must be between 0 and " + GameValues.TILE_WIDTH + ".");
+            throw new IndexOutOfBoundsException("offset must be between 0 and " + GameValues.TILE_WIDTH + ", inclusive.");
         }
         
         if (offset == 0)
@@ -93,12 +92,10 @@ public class TiledCanvas extends Canvas {
             if (isVertical)
             {
                 neededHeight++;
-                startingPosY = (offset < 0) ? 1 : 0;
             }
             else
             {
                 neededWidth++;
-                startingPosX = (offset < 0) ? 1 : 0;
             }
             
             if (region.length != neededHeight || region[0].length != neededWidth)
@@ -107,7 +104,20 @@ public class TiledCanvas extends Canvas {
             }
         }
         
-        // TODO add drawing code here
+        for(int i = 0; i < region.length; i++)
+        {
+            for(int j = 0; j < region[0].length; j++)
+            {
+                if (isVertical)
+                {
+                    gc.drawImage(region[i][j], j*GameValues.TILE_WIDTH, (i*GameValues.TILE_WIDTH) + offset, GameValues.TILE_WIDTH, GameValues.TILE_WIDTH);
+                }
+                else
+                {
+                    gc.drawImage(region[i][j], (j*GameValues.TILE_WIDTH) + offset, i*GameValues.TILE_WIDTH, GameValues.TILE_WIDTH, GameValues.TILE_WIDTH);
+                }
+            }
+        }
     }
     
     /**

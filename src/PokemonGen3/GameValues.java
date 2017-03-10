@@ -14,9 +14,31 @@ package PokemonGen3;
 public class GameValues {
     
     // Pixel dimentions
-    public final static int GAME_WIDTH = 300; //in px
-    public final static int GAME_HEIGHT = 180; //in px
-    public final static int TILE_WIDTH = 30; //in px
+    
+    /**
+     * Width of the visual region in pixels
+     */
+    public final static int GAME_WIDTH = 450; //in px
+    
+    /**
+     * Height of the visual region in pixels
+     */
+    public final static int GAME_HEIGHT = 330; //in px
+    
+    /**
+     * Width of a tile
+     */
+    public final static int TILE_WIDTH = 30; //in px //to be changed once actual tiles are used
+    
+    /**
+     * Width of the visual region in tiles
+     */
+    public final static int REGION_WIDTH = GAME_WIDTH / TILE_WIDTH;
+    
+    /**
+     * Height of the visual region in tiles
+     */
+    public final static int REGION_HEIGHT = GAME_HEIGHT / TILE_WIDTH;
     
     
 }
