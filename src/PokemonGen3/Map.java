@@ -35,13 +35,13 @@ public class Map {
     private IntegerBinding playerPositionY;
 
     
-    private int[][] map;
+    private short[][] map;
     
     /**
      * Creates a map. Can be easily manipulated using a MapHelper
      * @param startingMap 
      */
-    public Map(int[][] startingMap)
+    public Map(short[][] startingMap)
     {
         map = startingMap;
         height = map.length;

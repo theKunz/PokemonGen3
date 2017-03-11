@@ -40,5 +40,10 @@ public class GameValues {
      */
     public final static int REGION_HEIGHT = GAME_HEIGHT / TILE_WIDTH;
     
+    /**
+     * Path to map files
+     */
+    public final static String MAP_PATH = "C:\\Users\\%USERNAME%\\Documents\\NetBeansProjects\\PokemonGen3\\src\\Resources\\Maps\\";
+    
     
 }

@@ -25,7 +25,8 @@ public class MapHelper {
     
     public MapHelper(String fileName)
     {
-        
+        this();
+        getMapByFilename(fileName);
     }
     
     /**
@@ -33,7 +34,7 @@ public class MapHelper {
      * @param filename
      * @return 
      */
-    public int[][] getMapByFilename(String filename)
+    public short[][] getMapByFilename(String filename)
     {
        return null;
     }
@@ -42,7 +43,7 @@ public class MapHelper {
      * Returned the map saved in memory
      * @return 
      */
-    public int[][] getSavedMap()
+    public short[][] getSavedMap()
     {
         return null; //replace
     }
@@ -54,7 +55,7 @@ public class MapHelper {
      * @param y 
      * @param action
      */
-    public void modifyMap(int[][] map, int x, int y, Map.MapAction action)
+    public void modifyMap(short[][] map, int x, int y, Map.MapAction action)
     {
         if (action == null)
         {
