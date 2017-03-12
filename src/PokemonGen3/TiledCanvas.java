@@ -16,8 +16,8 @@ import javafx.scene.image.Image;
  */
 public class TiledCanvas extends Canvas {
      
-    private int gridwidth;
-    private int gridheight;
+    private final int gridwidth;
+    private final int gridheight;
     
     /**
      * Create a new Canvas with methods to create a gridded world.
@@ -27,8 +27,8 @@ public class TiledCanvas extends Canvas {
     public TiledCanvas(int width, int height) 
     {
         super(width, height);
-        gridwidth = width;
-        gridheight = height;
+        gridwidth = width / GameValues.TILE_WIDTH;
+        gridheight = height / GameValues.TILE_WIDTH;
     }
     
     /**
@@ -38,19 +38,7 @@ public class TiledCanvas extends Canvas {
     {
         TileRetriever tileRetriever = new TileRetriever();
         GraphicsContext gc = getGraphicsContext2D();
-        for (int i = 0; i < 7; i++)
-        {
-            for (int j = 0; j < 11; j++)
-            {
-                Image tile = tileRetriever.GetImage((j + 1) + (i * 11));
-                gc.drawImage(tile, j*30 - 30, i*30 - 30, 30, 30);
-            }
-        }
         
-        gc.clearRect(0, 0, GameValues.TILE_WIDTH, GameValues.TILE_WIDTH);
-        gc.drawImage(tileRetriever.GetImage(70), 0, 0, 30, 30);
-        
-        gc.clearRect(45, 45, GameValues.TILE_WIDTH, GameValues.TILE_WIDTH);
     }
     
     /**

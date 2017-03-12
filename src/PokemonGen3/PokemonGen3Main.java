@@ -30,9 +30,8 @@ public class PokemonGen3Main extends Application {
         Initialize();
         
         TiledCanvas canvasRoot = new TiledCanvas(GameValues.GAME_WIDTH, GameValues.GAME_HEIGHT);
-        canvasRoot.SetTestTiles();
-        
-        
+        MapHelper helper = new MapHelper(GameValues.MAP_PATH + "TestMap1.map");
+        canvasRoot.DrawMapRegion(helper.getCurrentRegion());
         
         Group root = new Group();
         VBox vbox = new VBox();
@@ -55,7 +54,7 @@ public class PokemonGen3Main extends Application {
     }
     
     /**
-     * Run any code needed to be run BEFORE creating the TiledCanvas object.
+     * Run any code needed to be run at the beginning.
      */
     private void Initialize()
     {

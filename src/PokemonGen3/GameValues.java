@@ -43,7 +43,6 @@ public class GameValues {
     /**
      * Path to map files
      */
-    public final static String MAP_PATH = "C:\\Users\\%USERNAME%\\Documents\\NetBeansProjects\\PokemonGen3\\src\\Resources\\Maps\\";
-    
+    public final static String MAP_PATH = "Resources\\Maps\\";    
     
 }

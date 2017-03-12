@@ -34,18 +34,15 @@ public class Map {
     private IntegerBinding playerPositionX;
     private IntegerBinding playerPositionY;
 
-    
     private short[][] map;
     
-    /**
-     * Creates a map. Can be easily manipulated using a MapHelper
-     * @param startingMap 
-     */
-    public Map(short[][] startingMap)
+    public Map(short[][] startingMap, short posX, short posY)
     {
         map = startingMap;
         height = map.length;
         width = map[0].length;
+        currentPositionX = new SimpleIntegerProperty(posX);
+        currentPositionY = new SimpleIntegerProperty(posY);
         
         if(GameValues.REGION_WIDTH % 2 == 1)
         {
@@ -64,6 +61,15 @@ public class Map {
         {
             playerPositionX = currentPositionY.add((GameValues.REGION_HEIGHT / 2));
         }
+    }
+    
+    /**
+     * Creates a map. Can be easily manipulated using a MapHelper
+     * @param startingMap 
+     */
+    public Map(short[][] startingMap)
+    {
+        this(startingMap, (short)0, (short)0);
     }
         
     public void moveLeft()
@@ -86,23 +92,27 @@ public class Map {
         currentPositionY.add(1);
     }
     
-    public int[][] getCurrentRegion()
+    public short[][] getCurrentRegion()
     {
-        int[][] region = new int[GameValues.REGION_HEIGHT][GameValues.REGION_WIDTH];
+        short[][] region = new short[GameValues.REGION_HEIGHT][GameValues.REGION_WIDTH];
         for (int i = currentPositionY.intValue(); i < currentPositionY.intValue() + GameValues.REGION_HEIGHT; i++)
         {
-            System.arraycopy(map, currentPositionX.intValue(), region[i], 0, GameValues.REGION_WIDTH);
+            for (int j = currentPositionX.intValue(); j < currentPositionX.intValue() + GameValues.REGION_WIDTH; j++)
+            {
+                region[i - currentPositionY.intValue()][j - currentPositionX.intValue()] = map[i][j];
+            }
+            //System.arraycopy(map, currentPositionX.intValue(), region[i], 0, GameValues.REGION_WIDTH);
         }
         
         return region;
     }
     
-    public int[][] getCurrentMovementRegion(Direction direction)
+    public short[][] getCurrentMovementRegion(Direction direction)
     {
-        int[][] region;
+        short[][] region;
         if (direction == Direction.LEFT || direction == Direction.RIGHT)
         {
-            region = new int[GameValues.REGION_HEIGHT][GameValues.REGION_WIDTH + 1];
+            region = new short[GameValues.REGION_HEIGHT][GameValues.REGION_WIDTH + 1];
             if (direction == Direction.LEFT)
             {
                 for (int i = currentPositionY.intValue(); i < currentPositionY.intValue() + GameValues.REGION_HEIGHT; i++)
@@ -120,7 +130,7 @@ public class Map {
         }
         else
         {
-            region = new int[GameValues.REGION_HEIGHT + 1][GameValues.REGION_WIDTH];
+            region = new short[GameValues.REGION_HEIGHT + 1][GameValues.REGION_WIDTH];
             if (direction == Direction.UP)
             {
                 for (int i = currentPositionY.intValue() - 1; i < currentPositionY.intValue() + GameValues.REGION_HEIGHT + 1; i++)

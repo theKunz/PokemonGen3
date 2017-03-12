@@ -6,27 +6,32 @@
 package PokemonGen3;
 
 import java.io.File;
+import java.io.DataInputStream;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import javafx.scene.image.Image;
 
 /**
  *
  * @author AaronKunzer
  */
-public class MapHelper {
+public final class MapHelper {
     
-    private byte mapWidth;
-    private byte mapHeight;
+    private short mapWidth;
+    private short mapHeight;
+    @SuppressWarnings("FieldMayBeFinal")
     private Map map;
-    private File mapFile;
-    
-    public MapHelper()
-    {
-        
-    }
     
     public MapHelper(String fileName)
     {
-        this();
-        getMapByFilename(fileName);
+        loadNewMap(fileName);
+    }
+    
+    public void loadNewMap(String filename)
+    {
+        map = new Map(getMapByFilename(filename));
     }
     
     /**
@@ -36,16 +41,75 @@ public class MapHelper {
      */
     public short[][] getMapByFilename(String filename)
     {
-       return null;
+        short[][] ret = null;
+        
+        try
+        {
+            DataInputStream input = new DataInputStream(new BufferedInputStream(new FileInputStream(new File(filename))));
+            
+            try
+            {
+                mapHeight = input.readShort();
+                mapWidth = input.readShort();
+                
+                ret = new short[mapHeight][mapWidth];
+                for (int i = 0; i < mapHeight; i++)
+                {
+                    for (int j = 0; j < mapWidth; j++)
+                    {
+                        ret[i][j] = input.readShort();
+                    }
+                }
+                input.close();
+            }
+            catch (IOException ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+        catch (FileNotFoundException ex)
+        {
+            ex.printStackTrace();
+        }
+        
+        if (ret == null)
+        {
+            throw new NullPointerException(".map file " + filename + " not read");
+        }
+        
+        return ret;
     }
     
-    /**
-     * Returned the map saved in memory
-     * @return 
-     */
-    public short[][] getSavedMap()
+    public Image[][] getCurrentRegion()
     {
-        return null; //replace
+        short[][] region = map.getCurrentRegion();
+        Image[][] ret = new Image[region.length][region[0].length];
+        
+        for(int i = 0; i < region.length; i++)
+        {
+            for(int j = 0; j < region[0].length; j++)
+            {
+                ret[i][j] = TileRetriever.GetImage(region[i][j]);
+            }
+        }
+        
+        return ret;
+    }
+    
+    public Image[][] getCurrentMovementRegion(Map.Direction direction)
+    {
+        short[][] region = map.getCurrentMovementRegion(direction);
+        Image[][] ret = new Image[region.length][region[0].length];
+        
+        for(int i = 0; i < region.length; i++)
+        {
+            for(int j = 0; j < region[0].length; j++)
+            {
+                ret[i][j] = TileRetriever.GetImage(region[i][j]);
+            }
+        }
+        
+        return ret;       
     }
     
     /**

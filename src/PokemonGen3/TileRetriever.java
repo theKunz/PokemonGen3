@@ -14,20 +14,24 @@ import javafx.scene.image.Image;
 
 public class TileRetriever {
     
-    public static HashMap<Integer, String> TileMap;
+    public static HashMap<Short, String> TileMap;
     
     public static void InitTileMap()
     {
         TileMap = new HashMap<>();
-        for (int i = 1; i <= 77; i++)
+        for (short i = 1; i <= 10; i++)
         {
             TileMap.put(i, String.format("%02d", i));
         }
     }
     
-    public Image GetImage(int tileKey)
+    public static Image GetImage(short tileKey)
     {
-        return new Image(("Resources/" + TileMap.get(tileKey) + ".png"));
+        if(TileMap == null)
+        {
+            throw new NullPointerException("You must call InitTileMap before you can call this.");
+        }
+        return new Image("Resources/" + TileMap.get(tileKey) + ".png");
     }
     
 }
