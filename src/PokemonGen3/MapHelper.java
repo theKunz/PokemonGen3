@@ -11,6 +11,10 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 
 /**
@@ -143,4 +147,135 @@ public final class MapHelper {
         }
     }
     
+    public void moveLeft()
+    {
+        map.moveLeft();
+    }
+    
+    public void moveRight()
+    {
+        map.moveRight();
+    }
+    
+    public void moveUp()
+    {
+        map.moveUp();
+    }
+    
+    public void moveDown()
+    {
+        map.moveDown();
+    }
+    
+    public void setMovementListeners(TiledCanvas canvas)
+    {
+        map.getIntegerPropertyX().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue o, Object oldVal, Object newVal)
+            {
+                Map.Direction dir;
+                if (((Integer)newVal) < ((Integer)oldVal))
+                {
+                    resetOffsetCounter(1);
+                    dir = Map.Direction.LEFT;
+                }
+                else
+                {
+                    resetOffsetCounter(-1);
+                    dir = Map.Direction.RIGHT;
+                }
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    public void run() 
+                    {
+                        int offset = getNextOffset();
+                        if (offset == GameValues.TILE_WIDTH || offset == GameValues.TILE_WIDTH * -1)
+                        {
+                            canvas.DrawMapRegion(getCurrentRegion());
+                            this.cancel();
+                            timer.purge();
+                        }
+                        else
+                        {
+                            if (dir == Map.Direction.LEFT)
+                            {
+                               canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), false, offset, GameValues.TILE_WIDTH * -1, 0); 
+                            }
+                            else
+                            {
+                               canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), false, offset, 0, 0);
+                            }
+                            
+                        }
+                    }
+                }, 0, 10);
+            }
+        });
+        
+        
+        map.getIntegerPropertyY().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue o, Object oldVal, Object newVal)
+            {
+                Map.Direction dir;
+                if (((Integer)newVal) < ((Integer)oldVal))
+                {
+                    resetOffsetCounter(1);
+                    dir = Map.Direction.UP;
+                }
+                else
+                {
+                    resetOffsetCounter(-1);
+                    dir = Map.Direction.DOWN;
+                }
+                Timer timer = new Timer();
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    public void run() 
+                    {
+                        int offset = getNextOffset();
+                        if (offset == GameValues.TILE_WIDTH || offset == GameValues.TILE_WIDTH * -1)
+                        {
+                            canvas.DrawMapRegion(getCurrentRegion());
+                            this.cancel();
+                            timer.purge();
+                        }
+                        else
+                        {
+                            if (dir == Map.Direction.DOWN)
+                            {
+                               canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), true, offset, 0, 0); 
+                            }
+                            else
+                            {
+                               canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), true, offset, 0, GameValues.TILE_WIDTH * -1);
+                            }
+                        }
+                    }
+                }, 0, 10);
+            }        
+        });
+    }
+    
+    int offset;
+    int offsetInterval;
+    
+    /**
+     * Dirty hack to get around local variable must be final for inner classes rule.
+     * 
+     */
+    public int getNextOffset()
+    {
+        offset += offsetInterval;
+        return offset;
+    }
+    
+    /**
+     * Dirty hack to get around local variable must be final for inner classes rule.
+     * @param interval offset interval
+     */
+    public void resetOffsetCounter(int interval)
+    {
+        offset = 0;
+        offsetInterval = interval;
+    }
 }

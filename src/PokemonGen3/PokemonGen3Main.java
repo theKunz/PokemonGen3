@@ -5,17 +5,13 @@
  */
 package PokemonGen3;
 
+
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -25,19 +21,25 @@ import javafx.stage.Stage;
  */
 public class PokemonGen3Main extends Application {
     
+    TiledCanvas canvasRoot;
+    MapHelper helper;
+    Scene scene;
+    
     @Override
     public void start(Stage primaryStage) {
         Initialize();
         
-        TiledCanvas canvasRoot = new TiledCanvas(GameValues.GAME_WIDTH, GameValues.GAME_HEIGHT);
-        MapHelper helper = new MapHelper(GameValues.MAP_PATH + "TestMap1.map");
+        canvasRoot = new TiledCanvas(GameValues.GAME_WIDTH, GameValues.GAME_HEIGHT);
+        helper = new MapHelper(GameValues.MAP_PATH + "TestMap1.map");
         canvasRoot.DrawMapRegion(helper.getCurrentRegion());
         
         Group root = new Group();
         VBox vbox = new VBox();
         vbox.getChildren().addAll(canvasRoot);
         root.getChildren().add(vbox);
-        Scene scene = new Scene(root, GameValues.GAME_WIDTH, GameValues.GAME_HEIGHT);
+        scene = new Scene(root, GameValues.GAME_WIDTH, GameValues.GAME_HEIGHT);
+        
+        setListeners();
         
         primaryStage.setResizable(false);
         primaryStage.setTitle("Pokemon v. Aaron");
@@ -61,4 +63,30 @@ public class PokemonGen3Main extends Application {
         TileRetriever.InitTileMap();
     }
     
+    private void setListeners()
+    {
+        helper.setMovementListeners(canvasRoot);
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                switch (ke.getCode()) {
+                    case LEFT:
+                        helper.moveLeft();
+                        break;
+                    case RIGHT:
+                        helper.moveRight();
+                        break;
+                    case UP:
+                        helper.moveUp();
+                        break;
+                    case DOWN:
+                        helper.moveDown();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        
+    }
 }

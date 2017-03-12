@@ -74,22 +74,22 @@ public class Map {
         
     public void moveLeft()
     {
-        currentPositionX.subtract(1);
+        currentPositionX.set(currentPositionX.get() - 1);
     }
     
     public void moveRight()
     {
-        currentPositionX.add(1);
+        currentPositionX.set(currentPositionX.get() + 1);
     }
     
     public void moveUp()
     {
-        currentPositionY.subtract(1);
+        currentPositionY.set(currentPositionY.get() - 1);
     }
     
     public void moveDown()
     {
-        currentPositionY.add(1);
+        currentPositionY.set(currentPositionY.get() + 1);
     }
     
     public short[][] getCurrentRegion()
@@ -117,14 +117,20 @@ public class Map {
             {
                 for (int i = currentPositionY.intValue(); i < currentPositionY.intValue() + GameValues.REGION_HEIGHT; i++)
                 {
-                    System.arraycopy(map, currentPositionX.intValue() - 1, region[i], 0, GameValues.REGION_WIDTH + 1);
+                    for (int j = currentPositionX.intValue(); j < currentPositionX.intValue() + GameValues.REGION_WIDTH  + 1; j++)
+                    {
+                        region[i - currentPositionY.intValue()][j - currentPositionX.intValue()] = map[i][j];
+                    }               
                 }
             }
             else
             {
                 for (int i = currentPositionY.intValue(); i < currentPositionY.intValue() + GameValues.REGION_HEIGHT; i++)
                 {
-                    System.arraycopy(map, currentPositionX.intValue(), region[i], 0, GameValues.REGION_WIDTH + 1);
+                    for (int j = currentPositionX.intValue() - 1; j < currentPositionX.intValue() + GameValues.REGION_WIDTH; j++)
+                    {
+                        region[i - currentPositionY.intValue()][j - currentPositionX.intValue() + 1] = map[i][j];
+                    }  
                 }                
             }
         }
@@ -133,16 +139,22 @@ public class Map {
             region = new short[GameValues.REGION_HEIGHT + 1][GameValues.REGION_WIDTH];
             if (direction == Direction.UP)
             {
-                for (int i = currentPositionY.intValue() - 1; i < currentPositionY.intValue() + GameValues.REGION_HEIGHT + 1; i++)
+                for (int i = currentPositionY.intValue(); i < currentPositionY.intValue() + GameValues.REGION_HEIGHT + 1; i++)
                 {
-                    System.arraycopy(map, currentPositionX.intValue(), region[i], 0, GameValues.REGION_WIDTH);
+                    for (int j = currentPositionX.intValue(); j < currentPositionX.intValue() + GameValues.REGION_WIDTH; j++)
+                    {
+                        region[i - currentPositionY.intValue()][j - currentPositionX.intValue()] = map[i][j];
+                    }
                 }
             }
             else
             {
-                for (int i = currentPositionY.intValue(); i < currentPositionY.intValue() + GameValues.REGION_HEIGHT + 1; i++)
+                for (int i = currentPositionY.intValue() - 1; i < currentPositionY.intValue() + GameValues.REGION_HEIGHT; i++)
                 {
-                    System.arraycopy(map, currentPositionX.intValue(), region[i], 0, GameValues.REGION_WIDTH);
+                    for (int j = currentPositionX.intValue(); j < currentPositionX.intValue() + GameValues.REGION_WIDTH; j++)
+                    {
+                        region[i - currentPositionY.intValue() + 1][j - currentPositionX.intValue()] = map[i][j];
+                    }
                 }                
             }
         }
@@ -158,6 +170,16 @@ public class Map {
     public int getCurrentPlayerPositionY()
     {
         return playerPositionY.intValue();
+    }
+    
+    public SimpleIntegerProperty getIntegerPropertyX()
+    {
+        return currentPositionX;
+    }
+    
+    public SimpleIntegerProperty getIntegerPropertyY()
+    {
+        return currentPositionY;
     }
     
 }
