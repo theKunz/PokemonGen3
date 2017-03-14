@@ -173,42 +173,48 @@ public final class MapHelper {
             @Override
             public void changed(ObservableValue o, Object oldVal, Object newVal)
             {
-                Map.Direction dir;
-                if (((Integer)newVal) < ((Integer)oldVal))
+                if (!isMoving)
                 {
-                    resetOffsetCounter(1);
-                    dir = Map.Direction.LEFT;
-                }
-                else
-                {
-                    resetOffsetCounter(-1);
-                    dir = Map.Direction.RIGHT;
-                }
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    public void run() 
+                    isMoving = true;
+                    Map.Direction dir;
+                    if (((Integer)newVal) < ((Integer)oldVal))
                     {
-                        int offset = getNextOffset();
-                        if (offset == GameValues.TILE_WIDTH || offset == GameValues.TILE_WIDTH * -1)
+                        resetOffsetCounter(1);
+                        dir = Map.Direction.LEFT;
+                    }
+                    else
+                    {
+                        resetOffsetCounter(-1);
+                        dir = Map.Direction.RIGHT;
+                    }
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        public void run() 
                         {
-                            canvas.DrawMapRegion(getCurrentRegion());
-                            this.cancel();
-                            timer.purge();
-                        }
-                        else
-                        {
-                            if (dir == Map.Direction.LEFT)
+                            int offset = getNextOffset();
+                            if (offset == GameValues.TILE_WIDTH || offset == GameValues.TILE_WIDTH * -1)
                             {
-                               canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), false, offset, GameValues.TILE_WIDTH * -1, 0); 
+                                canvas.DrawMapRegion(getCurrentRegion());
+                                isMoving = false;
+                                this.cancel();
+                                timer.purge();
+                                
                             }
                             else
                             {
-                               canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), false, offset, 0, 0);
+                                if (dir == Map.Direction.LEFT)
+                                {
+                                   canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), false, offset, GameValues.TILE_WIDTH * -1, 0); 
+                                }
+                                else
+                                {
+                                   canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), false, offset, 0, 0);
+                                }
+
                             }
-                            
                         }
-                    }
-                }, 0, 10);
+                    }, 0, 6);
+                }
             }
         });
         
@@ -217,47 +223,54 @@ public final class MapHelper {
             @Override
             public void changed(ObservableValue o, Object oldVal, Object newVal)
             {
-                Map.Direction dir;
-                if (((Integer)newVal) < ((Integer)oldVal))
+                if (!isMoving)
                 {
-                    resetOffsetCounter(1);
-                    dir = Map.Direction.UP;
-                }
-                else
-                {
-                    resetOffsetCounter(-1);
-                    dir = Map.Direction.DOWN;
-                }
-                Timer timer = new Timer();
-                timer.scheduleAtFixedRate(new TimerTask() {
-                    public void run() 
+                    isMoving = true;
+                    Map.Direction dir;
+                    if (((Integer)newVal) < ((Integer)oldVal))
                     {
-                        int offset = getNextOffset();
-                        if (offset == GameValues.TILE_WIDTH || offset == GameValues.TILE_WIDTH * -1)
+                        resetOffsetCounter(1);
+                        dir = Map.Direction.UP;
+                    }
+                    else
+                    {
+                        resetOffsetCounter(-1);
+                        dir = Map.Direction.DOWN;
+                    }
+                    Timer timer = new Timer();
+                    timer.scheduleAtFixedRate(new TimerTask() {
+                        public void run() 
                         {
-                            canvas.DrawMapRegion(getCurrentRegion());
-                            this.cancel();
-                            timer.purge();
-                        }
-                        else
-                        {
-                            if (dir == Map.Direction.DOWN)
+                            int offset = getNextOffset();
+                            if (offset == GameValues.TILE_WIDTH || offset == GameValues.TILE_WIDTH * -1)
                             {
-                               canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), true, offset, 0, 0); 
+                                canvas.DrawMapRegion(getCurrentRegion());
+                                isMoving = false;
+                                this.cancel();
+                                timer.purge();
+                                
                             }
                             else
                             {
-                               canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), true, offset, 0, GameValues.TILE_WIDTH * -1);
+                                if (dir == Map.Direction.DOWN)
+                                {
+                                   canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), true, offset, 0, 0); 
+                                }
+                                else
+                                {
+                                   canvas.DrawMapRegionWithOffset(getCurrentMovementRegion(dir), true, offset, 0, GameValues.TILE_WIDTH * -1);
+                                }
                             }
                         }
-                    }
-                }, 0, 10);
-            }        
+                    }, 0, 6);
+                }
+            }
         });
     }
     
     int offset;
     int offsetInterval;
+    boolean isMoving;
     
     /**
      * Dirty hack to get around local variable must be final for inner classes rule.

@@ -30,7 +30,7 @@ public class PokemonGen3Main extends Application {
         Initialize();
         
         canvasRoot = new TiledCanvas(GameValues.GAME_WIDTH, GameValues.GAME_HEIGHT);
-        helper = new MapHelper(GameValues.MAP_PATH + "TestMap1.map");
+        helper = new MapHelper(GameValues.MAP_PATH + "TestMap2.map");
         canvasRoot.DrawMapRegion(helper.getCurrentRegion());
         
         Group root = new Group();

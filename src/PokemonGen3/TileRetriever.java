@@ -20,7 +20,7 @@ public class TileRetriever {
     {
         //Initialize key to Image mapping 
         TileMap = new HashMap<>();
-        for (short i = 1; i <= 10; i++)
+        for (short i = 0; i <= 10; i++)
         {
             TileMap.put(i, new Image("Resources/" + String.format("%02d", i) + ".png"));
         }
